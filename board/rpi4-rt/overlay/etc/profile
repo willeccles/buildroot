@@ -1,0 +1,6 @@
+#PATH="/usr/local/bin:/usr/bin:/bin"
+
+#[ "${EUID:-$(id -u)}" -eq 0 ] && PATH="/usr/local/sbin:/usr/sbin:/sbin:$PATH"
+
+PS1='\u@\h:\w\$ '
+PS2='> '
