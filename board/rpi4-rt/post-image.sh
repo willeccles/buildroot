@@ -39,6 +39,24 @@ __EOF__
 
 done
 
+copy_overlay() {
+	for o in "$@"; do
+		cp "${BINARIES_DIR}/$o.dtb" "${BINARIES_DIR}/rpi-firmware/overlays/$o.dtbo"
+	done
+}
+
+en_overlay() {
+	for o in "$@"; do
+		if ! grep -qE "^dtoverlay=$o\$" "${BINARIES_DIR}/rpi-firmware/config.txt"; then
+			printf "%s\n" "dtoverlay=$o" >> "${BINARIES_DIR}/rpi-firmware/config.txt"
+		fi
+	done
+}
+
+# Add overlay(s) for testing.
+copy_overlay i2c6-peripherals
+en_overlay i2c6 i2c6-peripherals
+
 # Pass an empty rootpath. genimage makes a full copy of the given rootpath to
 # ${GENIMAGE_TMP}/root so passing TARGET_DIR would be a waste of time and disk
 # space. We don't rely on genimage to build the rootfs image, just to insert a

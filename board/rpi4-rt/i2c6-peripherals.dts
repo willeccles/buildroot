@@ -1,0 +1,25 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+  compatible = "brcm,bcm2711";
+
+  fragment@0 {
+    target = <&i2c6>;
+
+    frag0: __overlay__ {
+      clock-frequency = <400000>;
+
+      max31790@20 {
+        compatible = "max31790";
+        reg = <0x20>;
+      };
+
+      ltc4151@6f {
+        compatible = "lltc,ltc4151";
+        reg = <0x6f>;
+        shunt-resistor-micro-ohms = <5333>;
+      };
+    };
+  };
+};
