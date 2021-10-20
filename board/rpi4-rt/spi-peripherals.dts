@@ -1,0 +1,112 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2711";
+
+	fragment@0 {
+		target = <&spi0_cs_pins>;
+
+		frag0: __overlay__ {
+			brcm,pins = <8 7>;
+			brcm,function = <1>; /* output */
+		};
+	};
+
+	fragment@1 {
+		target = <&spi0>;
+
+		frag1: __overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&spi0_pins &spi0_cs_pins>;
+			cs-gpios = <&gpio 8 1>, <&gpio 7 1>;
+			status = "okay";
+
+			ctrl@0 {
+				compatible = "spidev";
+				symlink = "spi/ctrl";
+				reg = <0>;
+				spi-max-frequency = <10000000>;
+				spi-tx-delay-us = <0>;
+				spi-rx-delay-us = <0>;
+				spi-cpol;
+				spi-cpha;
+			};
+
+			relays@1 {
+				compatible = "spidev";
+				symlink = "spi/relays";
+				reg = <1>;
+				spi-max-frequency = <10000000>;
+				spi-tx-delay-us = <0>;
+				spi-rx-delay-us = <0>;
+				spi-cpol;
+				spi-cpha;
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&spi3_cs_pins>;
+
+		frag2: __overlay__ {
+			brcm,pins = <0 24 18>;
+			brcm,function = <1>; /* output */
+		};
+	};
+
+	fragment@3 {
+		target = <&spi3>;
+
+		frag3: __overlay__ {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&spi3_pins &spi3_cs_pins>;
+			cs-gpios = <&gpio 0 1>, <&gpio 24 1>, <&gpio 18 1>;
+			status = "okay";
+
+			ads8698@0 {
+				compatible = "spidev";
+				symlink = "spi/ads8698";
+				spi-max-frequency = <18000000>;
+				reg = <0>;
+				spi-cpha;
+			};
+
+			max5134x2@1 {
+				compatible = "spidev";
+				symlink = "spi/max5134x2";
+				reg = <1>;
+				spi-max-frequency = <30000000>;
+				spi-cpol;
+			};
+
+			mcp23s08@2 {
+				compatible = "microchip,mcp23s08";
+				reg = <2>;
+				gpio-controller;
+				#gpio-cells = <2>;
+				microchip,spi-present-mask = <0x01>;
+				spi-max-frequency = <10000000>;
+				spi-cpol;
+				spi-cpha;
+				pinctrl-names = "default";
+				pinctrl-0 = <&mcp23s08pullups>;
+
+				/* Enable internal 100K pull-ups. */
+				mcp23s08pullups: pinmux {
+					pins = "gpio0", "gpio1", "gpio2",
+						"gpio3", "gpio4", "gpio5",
+						"gpio6", "gpio7";
+
+					bias-pull-up;
+				};
+			};
+		};
+	};
+};
