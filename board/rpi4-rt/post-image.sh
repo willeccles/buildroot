@@ -58,6 +58,8 @@ copy_overlay i2c6-peripherals
 en_overlay i2c6 i2c6-peripherals
 copy_overlay spi-peripherals
 en_overlay spi-peripherals
+copy_overlay gpio-config
+en_overlay gpio-config
 
 # Pass an empty rootpath. genimage makes a full copy of the given rootpath to
 # ${GENIMAGE_TMP}/root so passing TARGET_DIR would be a waste of time and disk

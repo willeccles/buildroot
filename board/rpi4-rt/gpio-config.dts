@@ -1,0 +1,46 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2711";
+
+	fragment@0 {
+		target = <&gpio>;
+
+		__overlay__ {
+			test_gpios {
+				brcm,pins = <13 19 20 26>;
+				/* 0 = input, 1 = output */
+				brcm,function = <0 0 1 1>;
+				/* 0 = none, 1 = down, 2 = up */
+				brcm,pull = <0 0 1 2>;
+			};
+
+			/* See Documentation/devicetree/bindings/gpio/gpio.txt
+			 * for details on the GPIO line modes and hogging. */
+			fpga_init {
+				line-name = "fpga_init";
+				gpios = <13 0>;
+				input;
+			};
+
+			fpga_done {
+				line-name = "fpga_done";
+				gpios = <19 0>;
+				input;
+			};
+
+			ao_enable {
+				line-name = "ao_enable";
+				gpios = <20 0>;
+				output-low;
+			};
+
+			fpga_prog_b {
+				line-name = "fpga_prog_b";
+				gpios = <26 0>;
+				output-high;
+			};
+		};
+	};
+};
